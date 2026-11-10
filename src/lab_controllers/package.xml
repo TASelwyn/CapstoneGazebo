@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>lab_controllers</name>
+  <version>0.1.0</version>
+  <description>Lab robot code that runs the same on the sim and the real robots: shared robot settings (robots.yaml), target_follower, follow and WASD teleop.</description>
+  <maintainer email="thomas@selwyn.tech">Thomas Selwyn</maintainer>
+  <license>MIT</license>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>mocap_optitrack_interfaces</exec_depend>
+  <exec_depend>python3-tk</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

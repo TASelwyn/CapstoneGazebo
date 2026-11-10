@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Run any ROS command inside the container with everything sourced, e.g.
+#   docker compose exec sim ros-env ros2 topic echo /mocap_rigid_bodies --once
+source /opt/ros/jazzy/setup.bash
+source /ws/install/setup.bash
+exec "$@"

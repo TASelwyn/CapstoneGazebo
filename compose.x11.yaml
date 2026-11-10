@@ -1,0 +1,13 @@
+# Linux only, optional: show Gazebo on your own desktop instead of the browser.
+# Faster than the browser view, and uses your GPU's drivers if available.
+#   xhost +local:docker
+#   docker compose -f compose.yaml -f compose.x11.yaml up
+services:
+  sim:
+    environment:
+      GUI_MODE: x11
+      DISPLAY: ${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    devices:
+      - /dev/dri:/dev/dri      # Intel/AMD graphics; remove this line if it errors

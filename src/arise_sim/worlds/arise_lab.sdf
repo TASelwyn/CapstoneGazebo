@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<!--
+  ARISE drone-cage lab, set up for ground robots.
+
+  Adapted from arise.world in
+  https://github.com/AmirhosseinAsgharnia/gazebo_ros_rtabmap
+  Changes from the original:
+    - Drone (Parrot Bebop 2) removed.
+    - Gravity restored (the original had it off, which only suits a drone).
+    - The lab is now a proper model (models/arise_lab) instead of inline meshes,
+      so no hard-coded paths are needed.
+    - The cage mesh is visual only; simple boxes provide the floor and walls
+      for collisions, which is far more reliable for wheels than a thin mesh.
+    - Obstacle boxes and landmarks moved to an optional model (lab_obstacles),
+      added with the launch option obstacles:=true.
+
+  World coordinates: the cage interior spans about x -2.05..2.05 m and
+  y -4.2..4.05 m (4.1 x 8.25 m), so the origin (0, 0) is close to the middle
+  of the cage floor.
+-->
+<sdf version="1.9">
+  <world name="arise_lab">
+
+    <gravity>0 0 -9.81</gravity>
+
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact"/>
+
+    <scene>
+      <ambient>0.6 0.6 0.6 1</ambient>
+      <background>0.75 0.8 0.85 1</background>
+      <grid>false</grid>
+    </scene>
+
+    <light type="directional" name="lamp_1">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>0 0 -1</direction>
+    </light>
+
+    <include>
+      <uri>model://arise_lab</uri>
+      <name>arise_lab</name>
+      <pose>0 0 0 0 0 0</pose>
+    </include>
+
+  </world>
+</sdf>

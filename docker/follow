@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Start the follower (Ctrl+C stops it and the robot):
+#   docker compose exec sim follow               (follower from robots.yaml)
+#   docker compose exec sim follow wave_rover    (choose the follower)
+source /opt/ros/jazzy/setup.bash
+source /ws/install/setup.bash
+exec ros2 run lab_controllers follow "$@"

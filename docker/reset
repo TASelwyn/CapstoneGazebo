@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Put robots back at their start positions:
+#   docker compose exec sim reset            (all robots)
+#   docker compose exec sim reset jackal     (just one)
+source /opt/ros/jazzy/setup.bash
+source /ws/install/setup.bash
+exec ros2 run arise_sim reset "$@"

@@ -1,0 +1,26 @@
+# Start:   docker compose up
+# Then open http://localhost:6080/vnc.html?autoconnect=1&resize=remote
+# Stop:    Ctrl+C (or docker compose down)
+services:
+  sim:
+    build: .
+    image: arise-lab-sim:jazzy-harmonic
+    environment:
+      GUI_MODE: ${GUI_MODE:-novnc}
+      SCREEN_SIZE: ${SCREEN_SIZE:-1600x900}
+    # Launch options can be added after the default command, e.g.
+    #   docker compose run --rm --service-ports sim ros2 launch arise_sim sim.launch.py follower:=wave_rover
+    ports:
+      - "6080:6080"
+    volumes:
+      - ./:/ws                 # your copy of this repo
+      - build:/ws/build        # build output kept out of your folder
+      - install:/ws/install
+      - log:/ws/log
+    stdin_open: true
+    tty: true
+
+volumes:
+  build:
+  install:
+  log:

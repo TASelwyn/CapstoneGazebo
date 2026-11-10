@@ -1,0 +1,77 @@
+# Robot settings shared by the SIM and the REAL robots.
+#
+# Used by:  ros2 run lab_controllers follow   /   ros2 run lab_controllers teleop
+# and by the simulation (it creates its robots with these same names, IDs and
+# topics, so code behaves identically in both).
+#
+# To use a different copy of this file (e.g. one per robot), set
+#   export LAB_ROBOTS_CONFIG=/path/to/robots.yaml
+# Edits take effect the next time you start a command; no rebuild needed.
+
+# Topic the OptiTrack driver (or the simulated one) publishes on.
+mocap_topic: /mocap_rigid_bodies
+
+# Turn direction for anything that steers using OptiTrack (follow, wander).
+# -1.0 is what the real lab uses. The sim's OptiTrack is set up to match
+# (mirror_y: true in arise_sim's sim.yaml). See README "angular_sign".
+angular_sign: -1.0
+
+# The drivable floor area in OptiTrack coordinates (metres). Used by wander to
+# turn back before reaching a wall. These numbers fit the SIM's cage; for the
+# real lab, check them by watching /mocap_rigid_bodies at each corner.
+arena:
+  x: [-2.0, 2.0]
+  y: [-4.0, 4.0]
+
+# ---------------------------------------------------------------------------
+# Robots
+# ---------------------------------------------------------------------------
+# rigid_body_id:   the robot's Streaming ID in Motive.
+# cmd_vel_topic:   the topic the robot drives from.
+#                  PLACEHOLDERS: replace with the real robots' topics
+#                  (check with "ros2 topic list" on each robot).
+# cmd_vel_stamped: true  = geometry_msgs/TwistStamped (Clearpath on Jazzy)
+#                  false = geometry_msgs/Twist
+robots:
+  jackal:
+    rigid_body_id: 3
+    cmd_vel_topic: /j100_0000/cmd_vel      # placeholder: real one is /j100_<serial>/cmd_vel
+    cmd_vel_stamped: true
+  wave_rover:
+    rigid_body_id: 2
+    cmd_vel_topic: /wave_rover/cmd_vel     # placeholder: check the Pi's topic
+    cmd_vel_stamped: false
+
+# ---------------------------------------------------------------------------
+# Keyboard driving (teleop)
+# ---------------------------------------------------------------------------
+# Speeds while a key is held. Add a robot name underneath to override, e.g.
+#   jackal: {linear_speed: 0.5, angular_speed: 1.2}
+teleop:
+  linear_speed: 0.3           # m/s
+  angular_speed: 1.0          # rad/s
+
+# ---------------------------------------------------------------------------
+# Follower (target_follower.py)
+# ---------------------------------------------------------------------------
+# Which robot follows; the other robot is its target.
+follower: jackal
+
+# Extra parameters passed to target_follower.py. robot_id, target_id,
+# mocap_topic, cmd_vel_topic, cmd_vel_stamped and angular_sign are filled in
+# automatically from the settings above.
+# Careful with number types: the script declares k_rho as a whole number
+# (default 3), so write e.g. "k_rho: 2", not "k_rho: 2.0". The others
+# (k_theta, v_max, w_max, ...) are decimals, so write "v_max: 0.2", not "1".
+follower_params: {}
+
+# ---------------------------------------------------------------------------
+# Wander (drives around randomly inside the arena)
+# ---------------------------------------------------------------------------
+# Keep speed below the follower's v_max (0.18 m/s) so the follower can keep up.
+wander:
+  speed: 0.15             # m/s forward
+  max_turn: 0.6           # rad/s, largest random turn
+  turn_change: [2.0, 5.0] # seconds between picking a new random turn
+  wall_margin: 0.6        # m; start heading back to the middle this far from the edge
+  avoid_radius: 0.6       # m; steer away from other tracked bodies closer than this

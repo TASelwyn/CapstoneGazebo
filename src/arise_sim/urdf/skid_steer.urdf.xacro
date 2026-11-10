@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!--
+  Generic 4-wheel skid-steer robot for Gazebo Harmonic.
+
+  Both lab robots (Jackal and Wave Rover) are 4WD skid-steer, so they share
+  this macro and differ only in their numbers. The model's origin is on the
+  ground under the centre of the robot, so the pose Gazebo reports is the
+  robot's floor position.
+
+  Gazebo plugins:
+    DiffDrive          - drives the four wheels from <prefix>/cmd_vel
+    OdometryPublisher  - publishes the robot's TRUE pose in the world
+                         (used to fake OptiTrack), on the ground_truth topic
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="skid_steer" params="
+      name
+      chassis_x chassis_y chassis_z chassis_height chassis_mass
+      wheel_radius wheel_width wheel_mass wheelbase track
+      max_linear max_angular
+      cmd_vel_topic ground_truth_topic ground_truth_rate
+      chassis_color">
+
+    <xacro:property name="PI" value="3.141592653589793"/>
+
+    <material name="${name}_chassis_color"><color rgba="${chassis_color}"/></material>
+    <material name="${name}_wheel_color"><color rgba="0.1 0.1 0.1 1"/></material>
+
+    <link name="base_link">
+      <visual>
+        <origin xyz="0 0 ${chassis_height}"/>
+        <geometry><box size="${chassis_x} ${chassis_y} ${chassis_z}"/></geometry>
+        <material name="${name}_chassis_color"/>
+      </visual>
+      <!-- Small front marker so you can see which way the robot faces. -->
+      <visual>
+        <origin xyz="${chassis_x/2 - 0.01} 0 ${chassis_height + chassis_z/2 + 0.002}"/>
+        <geometry><box size="0.02 ${chassis_y*0.6} 0.004"/></geometry>
+        <material name="${name}_wheel_color"/>
+      </visual>
+      <collision>
+        <origin xyz="0 0 ${chassis_height}"/>
+        <geometry><box size="${chassis_x} ${chassis_y} ${chassis_z}"/></geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 0 ${chassis_height}"/>
+        <mass value="${chassis_mass}"/>
+        <inertia
+          ixx="${chassis_mass/12*(chassis_y*chassis_y + chassis_z*chassis_z)}" ixy="0" ixz="0"
+          iyy="${chassis_mass/12*(chassis_x*chassis_x + chassis_z*chassis_z)}" iyz="0"
+          izz="${chassis_mass/12*(chassis_x*chassis_x + chassis_y*chassis_y)}"/>
+      </inertial>
+    </link>
+
+    <xacro:macro name="wheel" params="pos x y">
+      <link name="wheel_${pos}">
+        <visual>
+          <origin rpy="${PI/2} 0 0"/>
+          <geometry><cylinder radius="${wheel_radius}" length="${wheel_width}"/></geometry>
+          <material name="${name}_wheel_color"/>
+        </visual>
+        <collision>
+          <origin rpy="${PI/2} 0 0"/>
+          <geometry><cylinder radius="${wheel_radius}" length="${wheel_width}"/></geometry>
+        </collision>
+        <inertial>
+          <mass value="${wheel_mass}"/>
+          <inertia
+            ixx="${wheel_mass/12*(3*wheel_radius*wheel_radius + wheel_width*wheel_width)}" ixy="0" ixz="0"
+            iyy="${wheel_mass/2*wheel_radius*wheel_radius}" iyz="0"
+            izz="${wheel_mass/12*(3*wheel_radius*wheel_radius + wheel_width*wheel_width)}"/>
+        </inertial>
+      </link>
+      <joint name="wheel_${pos}_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="wheel_${pos}"/>
+        <origin xyz="${x} ${y} ${wheel_radius}"/>
+        <axis xyz="0 1 0"/>
+      </joint>
+      <gazebo reference="wheel_${pos}">
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+      </gazebo>
+    </xacro:macro>
+
+    <xacro:wheel pos="front_left"  x="${wheelbase/2}"  y="${track/2}"/>
+    <xacro:wheel pos="rear_left"   x="${-wheelbase/2}" y="${track/2}"/>
+    <xacro:wheel pos="front_right" x="${wheelbase/2}"  y="${-track/2}"/>
+    <xacro:wheel pos="rear_right"  x="${-wheelbase/2}" y="${-track/2}"/>
+
+    <gazebo>
+      <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+        <left_joint>wheel_front_left_joint</left_joint>
+        <left_joint>wheel_rear_left_joint</left_joint>
+        <right_joint>wheel_front_right_joint</right_joint>
+        <right_joint>wheel_rear_right_joint</right_joint>
+        <wheel_separation>${track}</wheel_separation>
+        <wheel_radius>${wheel_radius}</wheel_radius>
+        <max_linear_velocity>${max_linear}</max_linear_velocity>
+        <max_angular_velocity>${max_angular}</max_angular_velocity>
+        <topic>${cmd_vel_topic}</topic>
+        <!-- Wheel odometry is published inside Gazebo but not bridged to ROS. -->
+        <odom_topic>/sim/${name}/wheel_odom</odom_topic>
+        <tf_topic>/sim/${name}/wheel_tf</tf_topic>
+        <frame_id>${name}/odom</frame_id>
+        <child_frame_id>${name}/base_link</child_frame_id>
+      </plugin>
+
+      <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+        <odom_frame>world</odom_frame>
+        <robot_base_frame>${name}/base_link</robot_base_frame>
+        <odom_topic>${ground_truth_topic}</odom_topic>
+        <tf_topic>/sim/${name}/ground_truth_tf</tf_topic>
+        <odom_publish_frequency>${ground_truth_rate}</odom_publish_frequency>
+        <dimensions>3</dimensions>
+      </plugin>
+    </gazebo>
+
+  </xacro:macro>
+</robot>

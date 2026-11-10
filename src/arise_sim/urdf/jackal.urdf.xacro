@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+  Clearpath Jackal (J100), simplified shapes with real dimensions.
+  Numbers follow Clearpath's J100 description: wheel radius 0.098 m,
+  wheelbase 0.262 m, track 0.37559 m, about 17 kg total.
+  Speed limits are estimates; adjust if needed.
+-->
+<robot name="jackal" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find arise_sim)/urdf/skid_steer.urdf.xacro"/>
+
+  <xacro:arg name="name" default="jackal"/>
+  <xacro:arg name="cmd_vel_topic" default="/jackal/cmd_vel"/>
+  <xacro:arg name="ground_truth_topic" default="/sim/jackal/ground_truth"/>
+  <xacro:arg name="ground_truth_rate" default="120"/>
+
+  <xacro:skid_steer
+      name="$(arg name)"
+      chassis_x="0.43" chassis_y="0.31" chassis_z="0.17" chassis_height="0.15"
+      chassis_mass="16.5"
+      wheel_radius="0.098" wheel_width="0.04" wheel_mass="0.477"
+      wheelbase="0.262" track="0.37559"
+      max_linear="2.0" max_angular="4.0"
+      cmd_vel_topic="$(arg cmd_vel_topic)"
+      ground_truth_topic="$(arg ground_truth_topic)"
+      ground_truth_rate="$(arg ground_truth_rate)"
+      chassis_color="0.95 0.75 0.1 1"/>
+</robot>

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Drive a robot around randomly (Ctrl+C stops it and the robot):
+#   docker compose exec sim wander               (the robot being followed)
+#   docker compose exec sim wander wave_rover    (choose the robot)
+source /opt/ros/jazzy/setup.bash
+source /ws/install/setup.bash
+exec ros2 run lab_controllers wander "$@"

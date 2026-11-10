@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Open the WASD driving window (it appears in the browser view):
+#   docker compose exec sim teleop               (the robot being followed)
+#   docker compose exec sim teleop jackal        (choose the robot)
+source /opt/ros/jazzy/setup.bash
+source /ws/install/setup.bash
+export DISPLAY="${DISPLAY:-:1}"   # browser view's screen, unless x11 mode set one
+exec ros2 run lab_controllers teleop "$@"

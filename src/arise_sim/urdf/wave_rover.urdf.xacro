@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+  Waveshare WAVE ROVER, simplified shapes.
+  From Waveshare's specs: 194 x 168 x 100 mm overall, 860 g,
+  80 mm wheels (42.5 mm wide), 1.25 m/s listed speed.
+  Wheelbase (0.114 m) and track (0.1255 m) are estimated from the overall
+  size and wheel size, since Waveshare doesn't list them. Measure the real
+  robot and update these if the sim's turning doesn't match.
+-->
+<robot name="wave_rover" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find arise_sim)/urdf/skid_steer.urdf.xacro"/>
+
+  <xacro:arg name="name" default="wave_rover"/>
+  <xacro:arg name="cmd_vel_topic" default="/wave_rover/cmd_vel"/>
+  <xacro:arg name="ground_truth_topic" default="/sim/wave_rover/ground_truth"/>
+  <xacro:arg name="ground_truth_rate" default="120"/>
+
+  <xacro:skid_steer
+      name="$(arg name)"
+      chassis_x="0.17" chassis_y="0.08" chassis_z="0.07" chassis_height="0.065"
+      chassis_mass="0.66"
+      wheel_radius="0.04" wheel_width="0.0425" wheel_mass="0.05"
+      wheelbase="0.114" track="0.1255"
+      max_linear="1.25" max_angular="6.0"
+      cmd_vel_topic="$(arg cmd_vel_topic)"
+      ground_truth_topic="$(arg ground_truth_topic)"
+      ground_truth_rate="$(arg ground_truth_rate)"
+      chassis_color="0.2 0.4 0.85 1"/>
+</robot>

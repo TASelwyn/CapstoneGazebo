@@ -1,0 +1,43 @@
+# SIMULATION-ONLY settings.
+#
+# Robot IDs, topics, speeds and follower settings are NOT here: they're shared
+# with the real robots, in lab_controllers/config/robots.yaml. The sim creates
+# one robot for each entry below, using that file's ID and topic for it.
+# Edits take effect the next time you start the sim; no rebuild needed.
+
+# ---------------------------------------------------------------------------
+# Simulated robots
+# ---------------------------------------------------------------------------
+# Names must match robots.yaml.
+# model:        which robot model to use (jackal or wave_rover)
+# spawn:        start position [x, y, yaw] (metres, radians); also used by reset.
+#               The cage floor spans about x -2..2 and y -4.2..4.
+# pivot_offset: where the Motive rigid-body origin sits relative to the robot's
+#               floor centre [x, y, z] in metres. Only matters if your code
+#               uses z, or the markers are far off-centre.
+robots:
+  jackal:
+    model: jackal
+    spawn: [0.0, -2.0, 1.5708]
+    pivot_offset: [0.0, 0.0, 0.0]
+  wave_rover:
+    model: wave_rover
+    spawn: [0.0, 2.0, -1.5708]
+    pivot_offset: [0.0, 0.0, 0.0]
+
+# ---------------------------------------------------------------------------
+# Simulated OptiTrack (publishes like the lab's ros2-mocap_optitrack driver)
+# ---------------------------------------------------------------------------
+mocap:
+  rate_hz: 120.0
+  mean_error: 0.0005          # value reported in every rigid body's mean_error
+  position_noise_std: 0.0     # metres; 0 = perfect tracking
+  yaw_noise_std: 0.0          # radians
+  # How the OptiTrack frame relates to the sim world. Set to reproduce the real
+  # lab: mirror_y true is what makes the lab's angular_sign -1.0 turn correctly
+  # (see README "angular_sign"). Confirm in the lab, then adjust here.
+  frame:
+    origin: [0.0, 0.0, 0.0]   # mocap origin's position in the sim world
+    origin_yaw: 0.0           # mocap x-axis direction in the sim world (rad)
+    mirror_y: true            # flip y (and yaw)
+    up_axis: z                # "z" or "y" (Motive's Up Axis streaming setting)

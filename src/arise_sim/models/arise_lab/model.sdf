@@ -1,0 +1,155 @@
+<?xml version="1.0" ?>
+<!--
+  ARISE drone cage (Carleton University), static.
+
+  The meshes and textures in meshes/ are the lab's in-house files, copied
+  from https://github.com/AmirhosseinAsgharnia/gazebo_ros_rtabmap
+  (see meshes/SOURCE.md).
+
+  Visuals: the original cage mesh, logo panels and QR-code panels.
+  Collisions: plain boxes matching the cage floor and its four walls, measured
+  from cage.dae. A thin-plane mesh makes a poor collision surface for wheels,
+  so the mesh itself is visual only.
+-->
+<sdf version="1.9">
+  <model name="arise_lab">
+    <static>true</static>
+
+    <!-- Cage mesh and logos, posed exactly as in the original world file. -->
+    <link name="cage_link">
+      <pose>2 4 0 0 0 1.57</pose>
+
+      <visual name="cage_visual">
+        <geometry>
+          <mesh><uri>model://arise_lab/meshes/cage.dae</uri></mesh>
+        </geometry>
+      </visual>
+
+      <visual name="logo_visual_1">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry><mesh><uri>model://arise_lab/meshes/exam_plane_s.dae</uri></mesh></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>0.8 0.8 0.8 1</diffuse>
+          <pbr><metal><albedo_map>model://arise_lab/meshes/logo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="logo_visual_2">
+        <pose>-4 0 0 0 0 -1.57</pose>
+        <geometry><mesh><uri>model://arise_lab/meshes/exam_plane_s.dae</uri></mesh></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>0.8 0.8 0.8 1</diffuse>
+          <pbr><metal><albedo_map>model://arise_lab/meshes/logo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="logo_visual_3">
+        <pose>-8.15 0 0 0 0 -1.57</pose>
+        <geometry><mesh><uri>model://arise_lab/meshes/exam_plane_s.dae</uri></mesh></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>0.8 0.8 0.8 1</diffuse>
+          <pbr><metal><albedo_map>model://arise_lab/meshes/logo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="logo_visual_4">
+        <pose>-4.15 4 0 0 0 1.57</pose>
+        <geometry><mesh><uri>model://arise_lab/meshes/exam_plane_s.dae</uri></mesh></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>0.8 0.8 0.8 1</diffuse>
+          <pbr><metal><albedo_map>model://arise_lab/meshes/logo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="logo_visual_5">
+        <pose>0 4 0 0 0 1.57</pose>
+        <geometry><mesh><uri>model://arise_lab/meshes/exam_plane_s.dae</uri></mesh></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>0.8 0.8 0.8 1</diffuse>
+          <pbr><metal><albedo_map>model://arise_lab/meshes/logo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="logo_visual_6">
+        <pose>-8.15 4 0 0 0 3.14</pose>
+        <geometry><mesh><uri>model://arise_lab/meshes/exam_plane_s.dae</uri></mesh></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>0.8 0.8 0.8 1</diffuse>
+          <pbr><metal><albedo_map>model://arise_lab/meshes/logo.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+    </link>
+
+    <!-- QR-code panels on the cage walls (world coordinates, as in the original). -->
+    <link name="qr_link">
+      <visual name="QR_0">
+        <pose>1.5 4 0.5 0 0 0</pose>
+        <geometry><plane><normal>0 1 0</normal><size>0.2 0.2</size></plane></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>0.8 0.8 0.8 1</diffuse>
+          <pbr><metal><albedo_map>model://arise_lab/meshes/0.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <visual name="QR_1">
+        <pose>-1.5 -4 0.5 0 0 0</pose>
+        <geometry><plane><normal>0 1 0</normal><size>0.2 0.2</size></plane></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>0.8 0.8 0.8 1</diffuse>
+          <pbr><metal><albedo_map>model://arise_lab/meshes/1.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+      <!-- The original world also uses 1.png for this panel; 2.png exists if that was a typo. -->
+      <visual name="QR_2">
+        <pose>2 -3.5 0.5 0 0 0</pose>
+        <geometry><plane><normal>1 0 0</normal><size>0.2 0.2</size></plane></geometry>
+        <material>
+          <double_sided>true</double_sided>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>0.8 0.8 0.8 1</diffuse>
+          <pbr><metal><albedo_map>model://arise_lab/meshes/1.png</albedo_map></metal></pbr>
+        </material>
+      </visual>
+    </link>
+
+    <!-- Collision geometry: floor plus the four cage walls (2.3 m tall). -->
+    <link name="collision_link">
+      <collision name="floor">
+        <pose>0 -0.075 -0.05 0 0 0</pose>
+        <geometry><box><size>6 11 0.1</size></box></geometry>
+        <surface>
+          <friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction>
+        </surface>
+      </collision>
+      <!-- Walls at x = +/-2.05 m -->
+      <collision name="wall_x_pos">
+        <pose>2.06 -0.075 1.15 0 0 0</pose>
+        <geometry><box><size>0.02 8.3 2.3</size></box></geometry>
+      </collision>
+      <collision name="wall_x_neg">
+        <pose>-2.06 -0.075 1.15 0 0 0</pose>
+        <geometry><box><size>0.02 8.3 2.3</size></box></geometry>
+      </collision>
+      <!-- Walls at y = 4.05 m and y = -4.2 m -->
+      <collision name="wall_y_pos">
+        <pose>0 4.06 1.15 0 0 0</pose>
+        <geometry><box><size>4.14 0.02 2.3</size></box></geometry>
+      </collision>
+      <collision name="wall_y_neg">
+        <pose>0 -4.21 1.15 0 0 0</pose>
+        <geometry><box><size>4.14 0.02 2.3</size></box></geometry>
+      </collision>
+    </link>
+
+  </model>
+</sdf>
