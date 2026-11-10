@@ -1,10 +1,14 @@
 # Start:   docker compose up
+#          (the first run downloads the prebuilt image from GitHub; no build needed)
 # Then open http://localhost:6080/vnc.html?autoconnect=1&resize=remote
 # Stop:    Ctrl+C (or docker compose down)
+# Update:  docker compose pull      (get the latest published image)
+# Build locally instead (only if you changed the Dockerfile):
+#          docker compose up --build
 services:
   sim:
+    image: ghcr.io/taselwyn/capstonegazebo:latest
     build: .
-    image: arise-lab-sim:jazzy-harmonic
     environment:
       GUI_MODE: ${GUI_MODE:-novnc}
       SCREEN_SIZE: ${SCREEN_SIZE:-1600x900}
